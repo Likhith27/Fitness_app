@@ -2,7 +2,7 @@ FROM node:21
 
 WORKDIR /app
 RUN npm install -g nodemon
-COPY package.json /app
+COPY ./package.json /app
 RUN npm ci
 COPY . /app
 EXPOSE 5000
