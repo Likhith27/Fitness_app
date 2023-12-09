@@ -4,8 +4,10 @@ services:
     image: frontend-image:latest
     ports:
       - '3000:3000'
+    environment:
+      - BACKEND_URL=http://localhost:5000
   backend:
-    image: likhith28/backend-image:latest
+    image: backend-image:latest
     ports:
       - '5000:5000'
     environment:
