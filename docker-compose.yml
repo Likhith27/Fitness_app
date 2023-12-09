@@ -1,7 +1,7 @@
-version: '1'
+version: '3'
 services:
   frontend:
-    image: likhith28/frontend-image:latest
+    image: frontend-image:latest
     ports:
       - '3000:3000'
   backend:
