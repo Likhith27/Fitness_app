@@ -11,7 +11,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
-
+const baseURL=process.env.BACKEND_URL || "http://localhost:5000";
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.primary.dark,
@@ -86,7 +86,7 @@ function Dashboard() {
 
   React.useEffect(() => {
     axios
-      .get("https://fitness-tracker-mern.herokuapp.com/exercises")
+      .get(baseURL + "/exercises")
       .then((response) => {
         setExercises(response.data);
       })
@@ -97,7 +97,7 @@ function Dashboard() {
 
   const deleteExercise = (id) => {
     axios
-      .delete("https://fitness-tracker-mern.herokuapp.com/exercises/" + id)
+      .delete(baseURL + "/exercises/" + id)
       .then((response) => {
         console.log(response.data);
       });

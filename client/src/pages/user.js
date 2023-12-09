@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import axios from "axios";
+const baseURL=process.env.BACKEND_URL || "http://localhost:5000";
 
 export default function User() {
   function Copyright() {
@@ -32,11 +33,10 @@ export default function User() {
     const user = {
       username,
     };
-    console.log(user);
     axios
-      .post("https://fitness-tracker-mern.herokuapp.com/users/add/", user)
-      .then((res) => console.log(res.data));
-
+      .post(baseURL+"/users/add", user)
+      .then((res) => console.log());
+    alert("User added succesfully!!");
     setUsername("");
   };
 

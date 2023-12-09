@@ -9,7 +9,7 @@ import Paper from "@material-ui/core/Paper";
 import axios from "axios";
 
 import Select from "@material-ui/core/Select";
-
+const baseURL=process.env.BACKEND_URL || "http://localhost:5000";
 export default function Exercises() {
   const [username, setUsername] = useState("");
   const [description, setDescription] = useState("");
@@ -19,7 +19,7 @@ export default function Exercises() {
 
   React.useEffect(() => {
     axios
-      .get("https://fitness-tracker-mern.herokuapp.com/users")
+      .get(baseURL + "/users")
       .then((response) => {
         if (response.data.length > 0) {
           setUsers(response.data.map((user) => user.username));
@@ -59,11 +59,11 @@ export default function Exercises() {
 
     axios
       .post(
-        "https://fitness-tracker-mern.herokuapp.com/exercises/add/",
+        baseURL + "/exercises/add/",
         exercise
       )
       .then((res) => console.log(res.data));
-
+    alert("Exercise added succesfully!!");
     setUsername("");
     setDescription("");
     setDuration("");
