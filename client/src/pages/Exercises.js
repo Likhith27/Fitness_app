@@ -40,7 +40,10 @@ export default function Exercises() {
   };
 
   const onChangeDuration = (e) => {
-    setDuration(e.target.value);
+    const value = e.target.value;
+    if (!isNaN(value) && Number.isInteger(Number(value))) {
+      setDuration(Number(value));
+    }
   };
 
   const onChangeDate = (e) => {
@@ -49,24 +52,27 @@ export default function Exercises() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-
+  
+    if (!Number.isInteger(duration)) {
+      alert("Duration field should be an integer, please try again");
+      return;
+    }
+  
     const exercise = {
       username,
       description,
       duration,
       date,
     };
-
+  
     axios
-      .post(
-        baseURL + "/exercises/add/",
-        exercise
-      )
+      .post(baseURL + "/exercises/add/", exercise)
       .then((res) => console.log(res.data));
-    alert("Exercise added succesfully!!");
+  
+    alert("Exercise added successfully!!");
     setUsername("");
     setDescription("");
-    setDuration("");
+    setDuration(0);
     setDate("");
   };
   function Copyright() {
@@ -162,6 +168,7 @@ export default function Exercises() {
               <Grid item xs={12}>
                 <TextField
                   required
+                  type = "number"
                   id="address1"
                   name="address1"
                   label="Enter duration(in minutes)"
