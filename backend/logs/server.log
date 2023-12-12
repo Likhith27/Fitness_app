@@ -1,0 +1,7 @@
+[23:57:43] [[32minfo[39m] [GET /exercises]
+[23:57:52] [[32minfo[39m] [POST /users/add - Adding user: vamsi]
+[23:57:52] [[32minfo[39m] [User added!]
+[23:57:53] [[32minfo[39m] [GET /users]
+[23:57:54] [[32minfo[39m] [Users found:]
+[23:58:10] [[32minfo[39m] [POST /exercises/add]
+[23:58:10] [[32minfo[39m] [Exercise added!]
