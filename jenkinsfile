@@ -2,51 +2,74 @@ pipeline{
     agent any
     environment{
         MONGO="mongodb+srv://likhith:123@cluster0.9xogppr.mongodb.net/blog"
-        // JWT="a1cd158e2b34d47af6d0b446f59a326849f0dd8eb7ac51244f4ab4c1cb99552b9f856a8fb488f20fdbf0d489fc93b4d94fb71148a1bd24e2386a6c71e4d8a3cd"
+        
     }
     stages{
         stage('Clone Git'){
             steps{
-                git 'https://github.com/Likhith27/Fitness_app'
+                git branch:'master' ,url: 'https://github.com/Likhith27/Fitness_app'
             }
         }
-        stage('Installing npm packages and building backend'){
+        stage('Building frontend'){
             steps{
-                dir('backend')
-                {
+                dir('client'){
                     sh "npm install"
-                    sh 'docker build -t backend-image .'
                 }
             }
         }
-        stage('Installing npm packages and building frontend'){
+        stage('Building backend'){
             steps{
-                dir('client')
-                {
+                dir('backend'){
                     sh "npm install"
-                    sh 'docker build -t frontend-image .'
                 }
             }
         }
-        stage('Push Images to DockerHub') 
-        {
-            steps 
-            {
-
-                // withCredentials([usernamePassword(credentialsId: 'docker_HUb', usernameVariable: 'likhith28', passwordVariable: 'Iammos@143')]) {
-                    sh 'docker login -u likhith28 -p Iammos@143'
-                    sh 'docker tag frontend-image likhith28/frontend-image:latest'
-                    sh 'docker push likhith28/frontend-image:latest'
-                    sh 'docker tag backend-image likhith28/backend-image:latest'
-                    sh 'docker push likhith28/backend-image:latest'
-                          
+        stage('Build Frontend Image') {
+            steps{
+                dir('client'){
+                    script{
+                        frontend_image = docker.build "likhith28/frontend:latest"
+                    }
+                }
             }
         }
-        stage('Ansible Deployment') {
-            steps {
-                script { 
-                    sh 'ansible-playbook -i inventory playbook.yml'
+         stage('Build Backend Image') {
+             steps{
+                dir('backend'){
+                    script{
+                        backend_image = docker.build "likhith28/backend:latest"
+                    }
                 }
+            }
+        }
+        stage('Stage 4: Push docker image to hub') {
+            steps{
+                script{
+                    docker.withRegistry('', 'DockerHubCred'){
+                        frontend_image.push()
+                        backend_image.push()
+                    }
+                }
+            }
+        }
+        stage('Stage 5: Clean docker images'){
+            steps{
+                script{
+                    sh 'docker container prune -f'
+                    sh 'docker image prune -f'
+                }
+            }
+        }
+        stage('Step 6: Ansible Deployment'){
+            steps{
+                ansiblePlaybook becomeUser: null,
+                colorized: true,
+                credentialsId: 'localhost',
+                disableHostKeyChecking: true,
+                installation: 'Ansible',
+                inventory: 'inventory',
+                playbook: 'playbook.yml',
+                sudoUser: null
             }
         }
     }
