@@ -1,15 +1,39 @@
 version: '3'
 services:
-  frontend:
-    image: frontend-image:latest
+  container_front:
+    image: frontend-image
     ports:
-      - '3000:3000'
+      - "3000:3000"
+    networks:
+      - mynetwork
+    depends_on:
+      - container_back
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://container_back:5000" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
     environment:
       - BACKEND_URL=http://localhost:5000
-  backend:
-    image: backend-image:latest
+
+  container_back:
+    image: backend-image
     ports:
-      - '5000:5000'
+      - "5000:5000"
+    networks:
+      - mynetwork
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
-      - MONGO_URI = "mongodb+srv://likhith:123@cluster0.9xogppr.mongodb.net/blog"
-      
+      - MONGO_URI=mongodb://mongodb_db:27017/mydatabase
+      - PORT=5000
+
+  mongodb_db:
+    networks:
+      - mynetwork
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+
+networks:
+  mynetwork:
