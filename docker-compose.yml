@@ -1,5 +1,9 @@
 version: '3'
 services:
+  mongodb_db:
+      image: mongo:latest
+      ports:
+        - "27017:27017"
   frontend:
     image: frontend-image:latest
     ports:
@@ -10,6 +14,12 @@ services:
     image: backend-image:latest
     ports:
       - '5000:5000'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
-      - MONGO_URI = "mongodb+srv://likhith:123@cluster0.9xogppr.mongodb.net/blog"
-      # - JWT=a1cd158e2b34d47af6d0b446f59a326849f0dd8eb7ac51244f4ab4c1cb99552b9f856a8fb488f20fdbf0d489fc93b4d94fb71148a1bd24e2386a6c71e4d8a3cd
+        - MONGO_URI=mongodb://mongodb_db:27017/mydatabase
+        - PORT=5000
+
+  
+
+      
