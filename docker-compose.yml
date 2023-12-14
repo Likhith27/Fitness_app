@@ -1,9 +1,5 @@
 version: '3'
 services:
-  mongodb_db:
-      image: mongo:latest
-      ports:
-        - "27017:27017"
   frontend:
     image: frontend-image:latest
     ports:
@@ -14,12 +10,6 @@ services:
     image: backend-image:latest
     ports:
       - '5000:5000'
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     environment:
-        - MONGO_URI=mongodb://mongodb_db:27017/mydatabase
-        - PORT=5000
-
-  
-
+      - MONGO_URI = "mongodb+srv://likhith:123@cluster0.9xogppr.mongodb.net/blog"
       
